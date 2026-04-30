@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Logic Monitor V2 - Hardcore Edition</title>
+    <title>Trading Logic Monitor V3.0 - Ultimate Hardcore</title>
     <style>
         :root {
             --bg-color: #020617;
@@ -14,6 +14,7 @@
             --success: #22c55e;
             --warning: #f59e0b;
             --accent: #38bdf8;
+            --border-color: #334155;
         }
 
         body {
@@ -26,6 +27,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
@@ -34,56 +36,91 @@
             border-radius: 1.5rem;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             width: 100%;
-            max-width: 800px;
-            border: 2px solid #1e293b;
+            max-width: 1400px;
+            border: 2px solid var(--border-color);
         }
 
         h1 {
-            font-size: 2.5rem; /* 字體加大 */
+            font-size: 3rem;
             margin-bottom: 0.5rem;
             text-align: center;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .subtitle {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--text-secondary);
             margin-bottom: 2.5rem;
+            font-weight: 500;
+        }
+
+        .status-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
         }
 
         .status-light {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin: 0 auto 3rem;
             background-color: var(--danger);
-            box-shadow: 0 0 40px var(--danger);
+            box-shadow: 0 0 50px var(--danger);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            font-size: 1.2rem;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
         }
 
         .status-light.green {
             background-color: var(--success);
-            box-shadow: 0 0 60px var(--success);
+            box-shadow: 0 0 80px var(--success);
+            color: #000;
+        }
+
+        .progress-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        /* 左右雙欄位佈局 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .column-title {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .check-group {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .check-item {
             display: flex;
             align-items: flex-start;
-            gap: 1.25rem;
+            gap: 1.5rem;
             padding: 1.5rem;
             background: #1e293b;
             border-radius: 1rem;
@@ -94,28 +131,30 @@
 
         .check-item:hover {
             border-color: var(--accent);
-            background: #334155;
+            background: #283548;
         }
 
         .check-item input {
-            width: 2rem; /* Checkbox 加大 */
-            height: 2rem;
+            width: 2.5rem;
+            height: 2.5rem;
             margin-top: 0.2rem;
             cursor: pointer;
+            accent-color: var(--success);
         }
 
         .check-label {
-            font-size: 1.4rem; /* 字體加大 */
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
             line-height: 1.4;
         }
 
         .check-label span {
             display: block;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
             font-weight: normal;
             margin-top: 0.5rem;
+            line-height: 1.5;
         }
 
         .highlight {
@@ -123,118 +162,181 @@
             font-weight: bold;
         }
 
+        .danger-text {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
         #action-btn {
             width: 100%;
-            padding: 1.5rem;
-            margin-top: 3rem;
-            border-radius: 0.75rem;
+            padding: 2rem;
+            border-radius: 1rem;
             border: none;
             font-weight: 900;
-            font-size: 1.5rem; /* 字體加大 */
+            font-size: 2rem;
             cursor: not-allowed;
             background-color: #334155;
             color: #64748b;
             transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         #action-btn.active {
             background-color: var(--success);
-            color: white;
+            color: #020617;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
         }
 
-        .footer-note {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--danger);
-            opacity: 0.8;
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>EXECUTION MACHINE V2</h1>
-    <p class="subtitle">資訊管理碩士邏輯校準中...</p>
+    <h1>System Override: 10-Point Verification</h1>
+    <p class="subtitle">完美通關協議：心態與戰術的絕對同步</p>
 
-    <div id="statusLight" class="status-light">NO GO</div>
-
-    <div class="check-group">
-        <!-- 新增：大刻度邊界 -->
-        <label class="check-item">
-            <input type="checkbox" class="monitor-check">
-            <div class="check-label">
-                大刻度邊界確認 (Major Scale Boundary)
-                <span>確認 60分K 或 4小時K 是否處於支撐/壓力位？不要在中間地帶進行「生理博弈」。</span>
-            </div>
-        </label>
-
-        <!-- 新增：技術形態 -->
-        <label class="check-item">
-            <input type="checkbox" class="monitor-check">
-            <div class="check-label">
-                破底翻 / 回踩機會判定 (Failure to Break Lower & Retest)
-                <span>價格是否假突破後迅速拉回？或是突破後已有明確縮量回踩？<span class="highlight">禁止追多追空。</span></span>
-            </div>
-        </label>
-
-        <label class="check-item">
-            <input type="checkbox" class="monitor-check">
-            <div class="check-label">
-                生理指標監控 (Dopamine Filter)
-                <span>心跳 < 80bpm。無興奮感，無報復性念頭。接受 $100 的損失作為系統成本。</span>
-            </div>
-        </label>
-
-        <label class="check-item">
-            <input type="checkbox" class="monitor-check">
-            <div class="check-label">
-                資產生存線 (Survival Margin)
-                <span>今日尚未損失超過 <span class="highlight">$300</span>。確保 70 萬資產安全。</span>
-            </div>
-        </label>
+    <div class="status-header">
+        <div id="statusLight" class="status-light">LOCKED</div>
+        <div class="progress-text">系統解鎖進度：<span id="counter">0</span> / 10</div>
     </div>
 
-    <button id="action-btn" disabled>等待邏輯同步...</button>
+    <div class="grid-container">
+        <!-- 左側：心態與資產防禦 -->
+        <div class="check-group">
+            <h2 class="column-title">🛡️ 左大腦：心態與防禦 (Mindset)</h2>
 
-    <div class="footer-note">
-        ※ 嚴禁在未達綠燈狀態下開啟 Tradovate。違者視為系統 Bug。
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    1. 抹除生理熱情 (Dopamine Zero)
+                    <span>心跳平穩。我現在沒有「想贏錢」的興奮感，只有執行 SOP 的枯燥感。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    2. 拒絕報復交易 (No Revenge)
+                    <span>我已接受先前的虧損為沉沒成本，絕不抱持「我要把那 1400 塊贏回來」的念頭。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    3. 單日生存底線 (Daily Loss Limit)
+                    <span>今日虧損尚未超過 <span class="highlight">$300</span>。若觸及，我將無條件關機，不找任何藉口。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    4. 接受停損事實 (Acceptance of Risk)
+                    <span>我已經在心理上 100% 接受這筆交易可能會虧損 $100。打到停損絕不會「受不了」。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    5. 捍衛總資產 (700K Firewall)
+                    <span>我清楚知道我在保衛總資產的絕對安全。<span class="danger-text">我不是賭徒，我是資產管理者。</span></span>
+                </div>
+            </label>
+        </div>
+
+        <!-- 右側：戰術與邊界確認 -->
+        <div class="check-group">
+            <h2 class="column-title">⚔️ 右大腦：戰術與執行 (Execution)</h2>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    6. 封印 1 分 K 線 (Timeframe Lock)
+                    <span>已徹底關閉 1 分 K 線圖。目前主觀圖表已鎖定在 <span class="highlight">15 分 K 或 60 分 K</span>。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    7. 大刻度邊界確認 (Major Support/Resistance)
+                    <span>價格確實來到大刻度（如 4H/1H）的關鍵支撐或壓力位。絕不在半山腰的噪音區盲目進場。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    8. 破底翻 / 回踩確認 (Pattern Trigger)
+                    <span>已出現明確的「假突破拉回（破底翻）」或「突破後縮量回踩」。<span class="danger-text">絕不憑感覺追高殺低。</span></span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    9. 規格強制降級 (Micro Contract Only)
+                    <span>嚴格確認合約規格為 <span class="highlight">MNQ (微型) 1 口</span>。禁止任何大合約操作。</span>
+                </div>
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" class="monitor-check">
+                <div class="check-label">
+                    10. 硬性停損與移動機制 (Hard Stop & Trailing)
+                    <span>進場點與 $100 停損點已計算完畢。並承諾獲利達標時，無條件將停損移至保本位 (BE)。</span>
+                </div>
+            </label>
+        </div>
     </div>
+
+    <button id="action-btn" disabled>系統鎖定：未達完美通關標準</button>
 </div>
 
 <script>
     const checks = document.querySelectorAll('.monitor-check');
     const statusLight = document.getElementById('statusLight');
     const actionBtn = document.getElementById('action-btn');
+    const counterDisplay = document.getElementById('counter');
 
-    function updateState() {
+    function updateSystemState() {
         const checkedCount = Array.from(checks).filter(c => c.checked).length;
-        const allChecked = checkedCount === checks.length;
+        const totalChecks = checks.length;
         
-        if (allChecked) {
+        // 更新計數器
+        counterDisplay.innerText = checkedCount;
+        
+        if (checkedCount === totalChecks) {
             statusLight.classList.add('green');
             statusLight.innerText = "READY";
             actionBtn.classList.add('active');
             actionBtn.disabled = false;
-            actionBtn.innerText = "准許進入市場 (執行機器模式)";
+            actionBtn.innerText = "授權通過：啟動冷酷執行模式";
         } else {
             statusLight.classList.remove('green');
-            statusLight.innerText = "NO GO";
+            statusLight.innerText = "LOCKED";
             actionBtn.classList.remove('active');
             actionBtn.disabled = true;
-            actionBtn.innerText = `邏輯未補完 (${checkedCount}/${checks.length})`;
+            actionBtn.innerText = `系統鎖定：未達完美通關標準 (${checkedCount}/${totalChecks})`;
         }
     }
 
     checks.forEach(check => {
-        check.addEventListener('change', updateState);
+        check.addEventListener('change', updateSystemState);
     });
 
     actionBtn.addEventListener('click', () => {
         if (!actionBtn.disabled) {
-            alert('系統指令：只看 15 分 K，只交易 MNQ，虧損 $100 必須離場。');
+            alert('【最高指導原則】\n\n你現在是一台機器。不預測、不幻想、不恐懼。\n打到停損就離場，打到停利就收工。\n\n正在為您導向交易平台...');
             window.location.href = "https://trader.tradovate.com/";
         }
     });
