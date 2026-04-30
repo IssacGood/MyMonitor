@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading System Access Monitor</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: var(--success);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .status-light {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background-color: var(--danger);
+            box-shadow: 0 0 20px var(--danger);
+            transition: all 0.5s ease;
+        }
+
+        .status-light.green {
+            background-color: var(--success);
+            box-shadow: 0 0 30px var(--success);
+        }
+
+        .check-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #0f172a;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .check-item:hover {
+            transform: translateX(5px);
+        }
+
+        .check-item input {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        .check-label {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .check-label span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        #action-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: not-allowed;
+            background-color: #334155;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+
+        #action-btn.active {
+            background-color: var(--success);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+        }
+
+        .warning-text {
+            color: var(--danger);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>系統操作許可監控</h1>
+    <p class="subtitle">將生理熱情轉換為冷酷執行</p>
+
+    <div id="statusLight" class="status-light"></div>
+
+    <div class="check-group">
+        <label class="check-item">
+            <input type="checkbox" class="monitor-check">
+            <div class="check-label">
+                生理指標冷卻
+                <span>心跳正常，無「想贏回來」的興奮感，前額葉皮質恢復邏輯主導。</span>
+            </div>
+        </label>
+
+        <label class="check-item">
+            <input type="checkbox" class="monitor-check">
+            <div class="check-label">
+                資產邊界確認 (Daily Loss Limit)
+                <span class="warning-text">今日虧損 < $300？總資產 70 萬不容許再次單日噴出 9%。</span>
+            </div>
+        </label>
+
+        <label class="check-item">
+            <input type="checkbox" class="monitor-check">
+            <div class="check-label">
+                去噪化圖表設定
+                <span>已關閉 1 分 K 線圖，目前主圖表鎖定於 15 分 K 線。</span>
+            </div>
+        </label>
+
+        <label class="check-item">
+            <input type="checkbox" class="monitor-check">
+            <div class="check-label">
+                合約與 SOP 鎖定
+                <span>僅操作 MNQ (微型) 1 口。進場前已設定好 $100 硬性止損。</span>
+            </div>
+        </label>
+    </div>
+
+    <button id="action-btn" disabled>禁止進入市場</button>
+</div>
+
+<script>
+    const checks = document.querySelectorAll('.monitor-check');
+    const statusLight = document.getElementById('statusLight');
+    const actionBtn = document.getElementById('action-btn');
+
+    function updateSystemState() {
+        const allChecked = Array.from(checks).every(c => c.checked);
+        
+        if (allChecked) {
+            statusLight.classList.add('green');
+            actionBtn.classList.add('active');
+            actionBtn.disabled = false;
+            actionBtn.innerText = "系統就緒：允許有限交易";
+        } else {
+            statusLight.classList.remove('green');
+            actionBtn.classList.remove('active');
+            actionBtn.disabled = true;
+            actionBtn.innerText = "禁止進入市場";
+        }
+    }
+
+    checks.forEach(check => {
+        check.addEventListener('change', updateSystemState);
+    });
+
+    actionBtn.addEventListener('click', () => {
+        if (!actionBtn.disabled) {
+            alert('警告：你正在進入具備高度風險的期貨市場。請像機器一樣執行，若心跳加速請立刻關機。');
+            window.location.href = "https://trader.tradovate.com/"; // 或是你常用的連結
+        }
+    });
+</script>
+
+</body>
+</html>
