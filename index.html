@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading System Access Monitor</title>
+    <title>Trading Logic Monitor V2 - Hardcore Edition</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            --bg-color: #020617;
+            --card-bg: #0f172a;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --danger: #ef4444;
             --success: #22c55e;
             --warning: #f59e0b;
+            --accent: #38bdf8;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             display: flex;
@@ -24,156 +25,183 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
 
         .container {
             background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             width: 100%;
-            max-width: 500px;
-            border: 1px solid #334155;
+            max-width: 800px;
+            border: 2px solid #1e293b;
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 2.5rem; /* 字體加大 */
             margin-bottom: 0.5rem;
             text-align: center;
-            color: var(--success);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .subtitle {
             text-align: center;
-            font-size: 0.875rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .status-light {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            margin: 0 auto 2rem;
+            margin: 0 auto 3rem;
             background-color: var(--danger);
-            box-shadow: 0 0 20px var(--danger);
-            transition: all 0.5s ease;
+            box-shadow: 0 0 40px var(--danger);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .status-light.green {
             background-color: var(--success);
-            box-shadow: 0 0 30px var(--success);
+            box-shadow: 0 0 60px var(--success);
         }
 
         .check-group {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .check-item {
             display: flex;
             align-items: flex-start;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: #0f172a;
-            border-radius: 0.5rem;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 1rem;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            border: 1px solid transparent;
         }
 
         .check-item:hover {
-            transform: translateX(5px);
+            border-color: var(--accent);
+            background: #334155;
         }
 
         .check-item input {
-            width: 1.25rem;
-            height: 1.25rem;
-            margin-top: 0.25rem;
+            width: 2rem; /* Checkbox 加大 */
+            height: 2rem;
+            margin-top: 0.2rem;
             cursor: pointer;
         }
 
         .check-label {
-            font-size: 0.95rem;
+            font-size: 1.4rem; /* 字體加大 */
+            font-weight: 600;
             line-height: 1.4;
         }
 
         .check-label span {
             display: block;
-            font-size: 0.8rem;
+            font-size: 1rem;
             color: var(--text-secondary);
+            font-weight: normal;
+            margin-top: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--warning);
+            font-weight: bold;
         }
 
         #action-btn {
             width: 100%;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            border-radius: 0.75rem;
             border: none;
-            font-weight: bold;
-            font-size: 1rem;
+            font-weight: 900;
+            font-size: 1.5rem; /* 字體加大 */
             cursor: not-allowed;
             background-color: #334155;
             color: #64748b;
-            transition: all 0.3s;
+            transition: all 0.4s;
         }
 
         #action-btn.active {
             background-color: var(--success);
             color: white;
             cursor: pointer;
-            box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
         }
 
-        .warning-text {
+        .footer-note {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
             color: var(--danger);
-            font-weight: bold;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>系統操作許可監控</h1>
-    <p class="subtitle">將生理熱情轉換為冷酷執行</p>
+    <h1>EXECUTION MACHINE V2</h1>
+    <p class="subtitle">資訊管理碩士邏輯校準中...</p>
 
-    <div id="statusLight" class="status-light"></div>
+    <div id="statusLight" class="status-light">NO GO</div>
 
     <div class="check-group">
+        <!-- 新增：大刻度邊界 -->
         <label class="check-item">
             <input type="checkbox" class="monitor-check">
             <div class="check-label">
-                生理指標冷卻
-                <span>心跳正常，無「想贏回來」的興奮感，前額葉皮質恢復邏輯主導。</span>
+                大刻度邊界確認 (Major Scale Boundary)
+                <span>確認 60分K 或 4小時K 是否處於支撐/壓力位？不要在中間地帶進行「生理博弈」。</span>
+            </div>
+        </label>
+
+        <!-- 新增：技術形態 -->
+        <label class="check-item">
+            <input type="checkbox" class="monitor-check">
+            <div class="check-label">
+                破底翻 / 回踩機會判定 (Failure to Break Lower & Retest)
+                <span>價格是否假突破後迅速拉回？或是突破後已有明確縮量回踩？<span class="highlight">禁止追多追空。</span></span>
             </div>
         </label>
 
         <label class="check-item">
             <input type="checkbox" class="monitor-check">
             <div class="check-label">
-                資產邊界確認 (Daily Loss Limit)
-                <span class="warning-text">今日虧損 < $300？總資產 70 萬不容許再次單日噴出 9%。</span>
+                生理指標監控 (Dopamine Filter)
+                <span>心跳 < 80bpm。無興奮感，無報復性念頭。接受 $100 的損失作為系統成本。</span>
             </div>
         </label>
 
         <label class="check-item">
             <input type="checkbox" class="monitor-check">
             <div class="check-label">
-                去噪化圖表設定
-                <span>已關閉 1 分 K 線圖，目前主圖表鎖定於 15 分 K 線。</span>
-            </div>
-        </label>
-
-        <label class="check-item">
-            <input type="checkbox" class="monitor-check">
-            <div class="check-label">
-                合約與 SOP 鎖定
-                <span>僅操作 MNQ (微型) 1 口。進場前已設定好 $100 硬性止損。</span>
+                資產生存線 (Survival Margin)
+                <span>今日尚未損失超過 <span class="highlight">$300</span>。確保 70 萬資產安全。</span>
             </div>
         </label>
     </div>
 
-    <button id="action-btn" disabled>禁止進入市場</button>
+    <button id="action-btn" disabled>等待邏輯同步...</button>
+
+    <div class="footer-note">
+        ※ 嚴禁在未達綠燈狀態下開啟 Tradovate。違者視為系統 Bug。
+    </div>
 </div>
 
 <script>
@@ -181,30 +209,33 @@
     const statusLight = document.getElementById('statusLight');
     const actionBtn = document.getElementById('action-btn');
 
-    function updateSystemState() {
-        const allChecked = Array.from(checks).every(c => c.checked);
+    function updateState() {
+        const checkedCount = Array.from(checks).filter(c => c.checked).length;
+        const allChecked = checkedCount === checks.length;
         
         if (allChecked) {
             statusLight.classList.add('green');
+            statusLight.innerText = "READY";
             actionBtn.classList.add('active');
             actionBtn.disabled = false;
-            actionBtn.innerText = "系統就緒：允許有限交易";
+            actionBtn.innerText = "准許進入市場 (執行機器模式)";
         } else {
             statusLight.classList.remove('green');
+            statusLight.innerText = "NO GO";
             actionBtn.classList.remove('active');
             actionBtn.disabled = true;
-            actionBtn.innerText = "禁止進入市場";
+            actionBtn.innerText = `邏輯未補完 (${checkedCount}/${checks.length})`;
         }
     }
 
     checks.forEach(check => {
-        check.addEventListener('change', updateSystemState);
+        check.addEventListener('change', updateState);
     });
 
     actionBtn.addEventListener('click', () => {
         if (!actionBtn.disabled) {
-            alert('警告：你正在進入具備高度風險的期貨市場。請像機器一樣執行，若心跳加速請立刻關機。');
-            window.location.href = "https://trader.tradovate.com/"; // 或是你常用的連結
+            alert('系統指令：只看 15 分 K，只交易 MNQ，虧損 $100 必須離場。');
+            window.location.href = "https://trader.tradovate.com/";
         }
     });
 </script>
